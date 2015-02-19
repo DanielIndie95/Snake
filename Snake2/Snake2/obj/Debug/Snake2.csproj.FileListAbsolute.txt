@@ -1,0 +1,5 @@
+C:\Users\Daniel\Documents\Visual Studio 2013\Projects\Snake2\Snake2\bin\Debug\Snake2.exe.config
+C:\Users\Daniel\Documents\Visual Studio 2013\Projects\Snake2\Snake2\bin\Debug\Snake2.exe
+C:\Users\Daniel\Documents\Visual Studio 2013\Projects\Snake2\Snake2\bin\Debug\Snake2.pdb
+C:\Users\Daniel\Documents\Visual Studio 2013\Projects\Snake2\Snake2\obj\Debug\Snake2.exe
+C:\Users\Daniel\Documents\Visual Studio 2013\Projects\Snake2\Snake2\obj\Debug\Snake2.pdb
