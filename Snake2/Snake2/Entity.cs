@@ -33,6 +33,8 @@ namespace Snake2
             
         }
 
+       
+
     }
 
     public class Food : Entity
@@ -44,11 +46,17 @@ namespace Snake2
                 this.value = value;
             }
 
-            public override void Kill()
+            public void Kill(Snake snake)
             {
                 base.Kill();
                 SnakeGame.RemoveFood(this);
-                SnakeGame.AddPoints(this);
+                SnakeGame.AddPoints(this , snake);
+            }
+
+            public override void Kill()
+            {
+                base.Kill();
+                SnakeGame.RemoveFood(this);                
             }
     }
 

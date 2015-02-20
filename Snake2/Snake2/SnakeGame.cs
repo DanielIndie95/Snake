@@ -11,8 +11,13 @@ namespace Snake2
     {
         public static Screen screen;
         public static bool gameOver;
-        private static Snake snake;
-        private static Direction dir;
+
+        private static Snake snake1;
+        private static Snake snake2;
+
+        private static Direction dir1;
+        private static Direction dir2;
+
         private static ConsoleKey key;
         private static List<Food> food;
         static void Main(string[] args)
@@ -42,10 +47,15 @@ namespace Snake2
                         Point pos = GetRandomPlace();
                         food.Add(new Food(2, pos.x, pos.y, '*'));
                     }
-                    if (key == ConsoleKey.RightArrow) dir = Direction.Right;
-                    if (key == ConsoleKey.LeftArrow) dir = Direction.Left;
-                    if (key == ConsoleKey.UpArrow) dir = Direction.Up;
-                    if (key == ConsoleKey.DownArrow) dir = Direction.Down;
+                    if (key == ConsoleKey.RightArrow) dir1 = Direction.Right;
+                    if (key == ConsoleKey.LeftArrow) dir1 = Direction.Left;
+                    if (key == ConsoleKey.UpArrow) dir1 = Direction.Up;
+                    if (key == ConsoleKey.DownArrow) dir1 = Direction.Down;
+
+                    if (key == ConsoleKey.D) dir2 = Direction.Right;
+                    if (key == ConsoleKey.A) dir2 = Direction.Left;
+                    if (key == ConsoleKey.W) dir2 = Direction.Up;
+                    if (key == ConsoleKey.S) dir2 = Direction.Down;
                     Update();
                     Draw();
                    
@@ -70,10 +80,11 @@ namespace Snake2
 
         private static void Update()
         {
-            snake.Update(dir);
+            snake1.Update(dir1);
+            snake2.Update(dir2);
             for(int i = 0; i< food.Count; i++)               
             {
-                Entity entity = food[i];
+                Food entity = food[i];
                 entity.Update();
             }
         }
@@ -82,19 +93,22 @@ namespace Snake2
         {
             Console.Clear();
             screen.ClearScreen();
-            snake.Draw();
+            snake1.Draw();
+            snake2.Draw();
             foreach (Entity entity in food)
             {
                 entity.Draw();
             }
             string buffer = screen.GetScreen();
-            buffer += Environment.NewLine + "Points: " + points;
+            buffer += Environment.NewLine + "Points: " + points1;
             Console.WriteLine(buffer);
         }
 
-        public static void GameOver()
+        public static void GameOver(Snake lost)
         {
             gameOver = true;
+            if (lost == snake1) firstLost = true;
+            else firstLost = false;
         }
 
         private static void OnGameOver()
@@ -107,7 +121,8 @@ namespace Snake2
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                string gameOverString = "Total Points: " + points;
+                string gameOverString = "Player 1 Total Points: " + points1;
+                gameOverString += Environment.NewLine + "Player 2 Total Points: " + points2;
                 gameOverString += Environment.NewLine + "You Snooze You Lose";
                 gameOverString += Environment.NewLine + "Better luck next time";
                 gameOverString += Environment.NewLine + "For Replay Press R, and try not to lose again :)";
@@ -120,10 +135,12 @@ namespace Snake2
             Console.ForegroundColor = ConsoleColor.White;
             food = new List<Food>();
             screen = new Screen(20, 20);
-            snake = new Snake(5, 2, 2);
+            snake1 = new Snake(5, 2, 2);
+            snake2 = new Snake(5, 18, 18);
             gameOver = false;
-            points = 0;
-            dir = Direction.Right;
+            points1 = 0;
+            dir1 = Direction.Right;
+            dir2 = Direction.Right;
         }
         public static Entity GetEntity(int x, int y)
         {
@@ -132,10 +149,13 @@ namespace Snake2
             {
                 entity = food.Where<Entity>(n => n.x == x && n.y == y).First();
             }
-            Entity cell = snake.GetCell(x, y);
+            Entity cell = snake1.GetCell(x, y);
+            Entity cell2 = snake2.GetCell(x, y);
             if (entity == null)
             {
+                if(cell2== null)
                 return cell;
+                return cell2;
             }
             return entity;
         }   
@@ -145,10 +165,16 @@ namespace Snake2
             food.Remove(foodToRemove);
         }
 
-        public static void AddPoints(Food foodEaten)
+        public static void AddPoints(Food foodEaten , Snake snake)
         {
-            points += foodEaten.value;            
+            if (snake == snake1)
+                points1 += foodEaten.value;
+            else
+                points2 += foodEaten.value;
         }
-        static int points;
+        static int points1;
+        static int points2;
+
+        public static bool firstLost;
     }
 }

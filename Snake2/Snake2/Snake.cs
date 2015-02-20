@@ -7,14 +7,14 @@ namespace Snake2
 {
     public class Snake
     {
-        private List<Entity> body;
+        private List<SnakeCell> body;
         private int originX;
         private int originY;
         private Direction lastDir;
         private int eaten;
         public Snake(int bodyLength , int startX , int startY)
         {
-            body = new List<Entity>(); //new Entity[bodyLength];
+            body = new List<SnakeCell>(); //new Entity[bodyLength];
             originX = startX;
             originY = startY;
             eaten = 0;
@@ -25,7 +25,7 @@ namespace Snake2
         {
             for (int i = 0; i < length; i++)
             {
-                body.Add(new Entity(originX + i, originY, '@'));
+                body.Add(new SnakeCell(originX + i, originY, '@'));
             }
             body[body.Count - 1].sign = '☻';
         }
@@ -61,27 +61,27 @@ namespace Snake2
                     } break;
                     
             }
-            if (GetCell(x,y) != null)
+            if (SnakeGame.GetEntity(x,y) is SnakeCell)
             {
-                SnakeGame.GameOver();
+                SnakeGame.GameOver(this);
                 return;
             }
-            if (SnakeGame.screen.OutOfBorder(y, x))
+            if (SnakeGame.screen.OutOfBorder(x, y))
             {
-                if (x == -1)
+                if (x <= -1)
                 {
                     x = SnakeGame.screen.width - 1;
                     
                 }
-                if (x == SnakeGame.screen.width)
+                if (x >= SnakeGame.screen.width)
                 {
                     x =0;
                 }
-                if (y == SnakeGame.screen.height)
+                if (y >= SnakeGame.screen.height)
                 {
                     y = 0;
                 }
-                if (y == -1)
+                if (y <= -1)
                 {
                     y = SnakeGame.screen.height-1;
                 }
@@ -90,12 +90,11 @@ namespace Snake2
 
             if (SnakeGame.GetEntity(x, y) is Food) // not the snake
             {
-               (SnakeGame.GetEntity(x, y) as Food).Kill();
+               (SnakeGame.GetEntity(x, y) as Food).Kill(this);
                 eaten++;
                 if (eaten % 3 == 0)
                 {
-                    
-                        body.Insert(0, new Entity(body[0].x, body[0].y , '@'));
+                    body.Insert(0, new SnakeCell(body[0].x, body[0].y, '@'));
                 }
             }
             

@@ -5,10 +5,16 @@ using System.Text;
 
 namespace Snake2
 {
-    public class SnakeCell
+    public class SnakeCell : Entity 
     {
-        public int x;
-        public int y;
-        public char sign;
+        public SnakeCell(int x, int y , char sign) : base(x,y,sign)
+        {
+
+        }
+
+        public override void Update()
+        {
+            base.Update();
+        }
     }
 }
